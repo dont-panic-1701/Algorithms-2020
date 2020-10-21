@@ -2,6 +2,8 @@
 
 package lesson1
 
+import java.io.File
+
 /**
  * Сортировка времён
  *
@@ -97,7 +99,31 @@ fun sortAddresses(inputName: String, outputName: String) {
  * 121.3
  */
 fun sortTemperatures(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    val file = File(inputName).readLines()
+    val negNums = mutableMapOf<Double, Int>()
+    val posNums = mutableMapOf<Double, Int>()
+    for (line in file) {
+        val reading = line.toDouble()
+        if (reading < 0)
+            negNums[reading] = negNums.getOrElse(reading, { 0 }) + 1
+        else
+            posNums[reading] = posNums.getOrElse(reading, { 0 }) + 1
+
+    }
+    for ((reading, quant) in negNums.toSortedMap()) {
+        for (i in 1..quant) {
+            writer.write(reading.toString())
+            writer.newLine()
+        }
+    }
+    for ((reading, quant) in posNums.toSortedMap()) {
+        for (i in 1..quant) {
+            writer.write(reading.toString())
+            writer.newLine()
+        }
+    }
+    writer.close()
 }
 
 /**
@@ -148,7 +174,14 @@ fun sortSequence(inputName: String, outputName: String) {
  * Результат: second = [1 3 4 9 9 13 15 20 23 28]
  */
 fun <T : Comparable<T>> mergeArrays(first: Array<T>, second: Array<T?>) {
-    for (i in first.indices) second[i] = first[i]
-    second.sort()
+    var fi = 0
+    var si = first.size
+    for (i in second.indices) {
+        if (fi < first.size && (si == second.size || first[fi] <= second[si]!!)) {
+            second[i] = first[fi++]
+        } else {
+            second[i] = second[si++]
+        }
+    }
 }
 
