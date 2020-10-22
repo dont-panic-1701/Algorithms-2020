@@ -31,7 +31,7 @@ fun optimizeBuyAndSell(inputName: String): Pair<Int, Int> {
 }
 
 /**
- * Задача Иосифа Флафия.
+ * Задача Иосифа Флавия.
  * Простая
  *
  * Образовав круг, стоят menNumber человек, пронумерованных от 1 до menNumber.
@@ -79,8 +79,12 @@ fun optimizeBuyAndSell(inputName: String): Pair<Int, Int> {
  * Общий комментарий: решение из Википедии для этой задачи принимается,
  * но приветствуется попытка решить её самостоятельно.
  */
+
 fun josephTask(menNumber: Int, choiceInterval: Int): Int {
-    TODO()
+    var ans = 0
+    for (i in 1..menNumber)
+        ans = (ans + choiceInterval) % i
+    return ans + 1
 }
 
 /**
@@ -93,9 +97,25 @@ fun josephTask(menNumber: Int, choiceInterval: Int): Int {
  * При сравнении подстрок, регистр символов *имеет* значение.
  * Если имеется несколько самых длинных общих подстрок одной длины,
  * вернуть ту из них, которая встречается раньше в строке first.
+ *
+ * O(m*n)
  */
 fun longestCommonSubstring(first: String, second: String): String {
-    TODO()
+    val array = IntArray(second.length)
+    var maxLen = 0
+    var maxLenIndex = 0
+    for (ch in first) {
+        for (i in array.size - 1 downTo 0) {
+            if (second[i] == ch) {
+                array[i] = 1 + if (i == 0) 0 else array[i - 1]
+                if (array[i] > maxLen) {
+                    maxLen = array[i]
+                    maxLenIndex = i
+                }
+            } else array[i] = 0
+        }
+    }
+    return second.substring(maxLenIndex - maxLen + 1..maxLenIndex)
 }
 
 /**
