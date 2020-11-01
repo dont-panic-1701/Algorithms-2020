@@ -162,6 +162,11 @@ abstract class AbstractBinarySearchTreeTest {
             }
             println("All clear!")
         }
+        val test = BinarySearchTree<Int>()
+        test.add(20)
+        test.add(20)
+        test.remove(20)
+        assertEquals(0, test.size)
     }
 
     protected fun doIteratorTest() {
@@ -205,6 +210,10 @@ abstract class AbstractBinarySearchTreeTest {
             }
             println("All clear!")
         }
+        val test = BinarySearchTree<Int>()
+        test.add(420)
+        assertEquals(true, test.iterator().hasNext())
+        assertEquals(420, test.iterator().next())
     }
 
     protected fun doIteratorRemoveTest() {
