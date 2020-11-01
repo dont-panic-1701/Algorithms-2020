@@ -12,6 +12,7 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
         final T value;
         Node<T> left = null;
         Node<T> right = null;
+        Node<T> parent;
 
         Node(T value) {
             this.value = value;
@@ -84,6 +85,7 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
             assert closest.right == null;
             closest.right = newNode;
         }
+        newNode.parent = closest;
         size++;
         return true;
     }
@@ -101,8 +103,47 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
      */
     @Override
     public boolean remove(Object o) {
-        // TODO
-        throw new NotImplementedError();
+        @SuppressWarnings("unchecked")
+        T t = (T) o;
+        if (!contains(o)) return false;
+        Node<T> removed = find(t);
+        assert removed != null;
+
+        if (removed.left == null) transplant(removed, removed.right);
+        else if (removed.right == null) transplant(removed, removed.left);
+        else {
+            Node<T> min = treeMin(removed.right);
+
+            if (min.parent != removed) {
+                if (min.right == null)
+                    min.parent.left = null;
+                else transplant(min, min.right);
+                min.right = removed.right;
+            }
+            transplant(removed, min);
+            min.left = removed.left;
+            removed.left.parent = min;
+        }
+        size--;
+        return true;
+    }
+
+    private void transplant(Node<T> oldN, Node<T> newN){
+        if (oldN.parent == null)
+            root = newN;
+        else if (oldN == oldN.parent.left)
+            oldN.parent.left = newN;
+        else
+            oldN.parent.right = newN;
+        if (newN != null) newN.parent = oldN.parent;
+    }
+
+    private Node<T> treeMin(Node<T> start) {
+        if (start == null) return null;
+        while (start.left != null) {
+            start = start.left;
+        }
+        return start;
     }
 
     @Nullable
@@ -118,6 +159,10 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
     }
 
     public class BinarySearchTreeIterator implements Iterator<T> {
+        private int nextPointer;
+        private Node<T> next = treeMin(root);
+        private Node<T> current;
+
 
         private BinarySearchTreeIterator() {
             // Добавьте сюда инициализацию, если она необходима.
@@ -125,49 +170,64 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
 
         /**
          * Проверка наличия следующего элемента
-         *
+         * <p>
          * Функция возвращает true, если итерация по множеству ещё не окончена (то есть, если вызов next() вернёт
          * следующий элемент множества, а не бросит исключение); иначе возвращает false.
-         *
+         * <p>
          * Спецификация: {@link Iterator#hasNext()} (Ctrl+Click по hasNext)
-         *
+         * <p>
          * Средняя
          */
         @Override
         public boolean hasNext() {
-            // TODO
-            throw new NotImplementedError();
+            return nextPointer != size;
         }
 
         /**
          * Получение следующего элемента
-         *
+         * <p>
          * Функция возвращает следующий элемент множества.
          * Так как BinarySearchTree реализует интерфейс SortedSet, последовательные
          * вызовы next() должны возвращать элементы в порядке возрастания.
-         *
+         * <p>
          * Бросает NoSuchElementException, если все элементы уже были возвращены.
-         *
+         * <p>
          * Спецификация: {@link Iterator#next()} (Ctrl+Click по next)
-         *
+         * <p>
          * Средняя
          */
         @Override
         public T next() {
-            // TODO
-            throw new NotImplementedError();
+            if (nextPointer >= size) {
+                throw new IllegalStateException();
+            }
+            current = next;
+            next = findNext(next);
+            nextPointer++;
+            return current.value;
+        }
+
+        private Node<T> findNext(Node<T> next) {
+            if (next.right != null) {
+                next = treeMin(next.right);
+                return next;
+            } else if (next != root) {
+                while (next.parent != null && next.value.compareTo(next.parent.value) <= 0)
+                    next = next.parent;
+            }
+            return next;
         }
 
         /**
          * Удаление предыдущего элемента
-         *
+         * <p>
          * Функция удаляет из множества элемент, возвращённый крайним вызовом функции next().
-         *
+         * <p>
          * Бросает IllegalStateException, если функция была вызвана до первого вызова next() или же была вызвана
          * более одного раза после любого вызова next().
-         *
+         * <p>
          * Спецификация: {@link Iterator#remove()} (Ctrl+Click по remove)
-         *
+         * <p>
          * Сложная
          */
         @Override

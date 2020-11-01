@@ -2,6 +2,8 @@
 
 package lesson2
 
+import java.io.File
+
 /**
  * Получение наибольшей прибыли (она же -- поиск максимального подмассива)
  * Простая
@@ -27,7 +29,23 @@ package lesson2
  * В случае обнаружения неверного формата файла бросить любое исключение.
  */
 fun optimizeBuyAndSell(inputName: String): Pair<Int, Int> {
-    TODO()
+    val file = File(inputName).readLines()
+    var min = Integer.MAX_VALUE
+    var maxD = Integer.MIN_VALUE
+    var inds = Pair(-1, -1)
+    var newMinI = -1
+    for (i in file.indices) {
+        if (!file[i].matches(Regex("""\d*"""))) throw IllegalArgumentException()
+        val numb = file[i].toInt()
+        if (numb - min > maxD) {
+            maxD = numb - min
+            inds = Pair(newMinI + 1, i + 1)
+        } else if (numb < min) {
+            min = numb
+            newMinI = i
+        }
+    }
+    return inds
 }
 
 /**
