@@ -27,6 +27,8 @@ import java.io.File
  * Например, для приведённого выше файла результат должен быть Pair(3, 4)
  *
  * В случае обнаружения неверного формата файла бросить любое исключение.
+ * Трудоемкость - O(n)
+ * Ресурсоемкость - О(n)
  */
 fun optimizeBuyAndSell(inputName: String): Pair<Int, Int> {
     val file = File(inputName).readLines()
@@ -96,6 +98,9 @@ fun optimizeBuyAndSell(inputName: String): Pair<Int, Int> {
  *
  * Общий комментарий: решение из Википедии для этой задачи принимается,
  * но приветствуется попытка решить её самостоятельно.
+ *
+ * Трудоемкость - O(n)
+ * Ресурсоемкость - О(1)
  */
 
 fun josephTask(menNumber: Int, choiceInterval: Int): Int {
@@ -116,7 +121,9 @@ fun josephTask(menNumber: Int, choiceInterval: Int): Int {
  * Если имеется несколько самых длинных общих подстрок одной длины,
  * вернуть ту из них, которая встречается раньше в строке first.
  *
- * O(m*n)
+ * Трудоемкость - O(m*n)
+ * Ресурсоемкость - О(n)
+ * m - длина первой строки, n - второй
  */
 fun longestCommonSubstring(first: String, second: String): String {
     val array = IntArray(second.length)

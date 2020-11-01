@@ -97,33 +97,32 @@ fun sortAddresses(inputName: String, outputName: String) {
  * 24.7
  * 99.5
  * 121.3
+ *
+ * Трудоемкость - O(n)
+ * Ресурсоемкость - О(1)
  */
 fun sortTemperatures(inputName: String, outputName: String) {
-    val writer = File(outputName).bufferedWriter()
-    val file = File(inputName).readLines()
-    val negNums = mutableMapOf<Double, Int>()
-    val posNums = mutableMapOf<Double, Int>()
-    for (line in file) {
-        val reading = line.toDouble()
-        if (reading < 0)
-            negNums[reading] = negNums.getOrElse(reading, { 0 }) + 1
-        else
-            posNums[reading] = posNums.getOrElse(reading, { 0 }) + 1
+    val minTemp = 2730
+    val maxTemp = 2730 + 5000 + 1
 
-    }
-    for ((reading, quant) in negNums.toSortedMap()) {
-        for (i in 1..quant) {
-            writer.write(reading.toString())
-            writer.newLine()
+    val quants = IntArray(maxTemp)
+    File(inputName).bufferedReader().use {
+        var line = it.readLine()
+        while (line != null) {
+            val reading = (line.toDouble() * 10 + minTemp).toInt()
+            quants[reading]++
+            line = it.readLine()
         }
     }
-    for ((reading, quant) in posNums.toSortedMap()) {
-        for (i in 1..quant) {
-            writer.write(reading.toString())
-            writer.newLine()
+
+    File(outputName).bufferedWriter().use {
+        for (temp in quants.indices) {
+            for (i in 1..quants[temp]) {
+                it.write(((temp - minTemp) / 10.0).toString())
+                it.newLine()
+            }
         }
     }
-    writer.close()
 }
 
 /**
@@ -172,6 +171,10 @@ fun sortSequence(inputName: String, outputName: String) {
  * second = [null null null null null 1 3 9 13 18 23]
  *
  * Результат: second = [1 3 4 9 9 13 15 20 23 28]
+ *
+ * Трудоемкость - O(m)
+ * Ресурсоемкость - О(n*m)
+ * n - размер первого массива, m - второго
  */
 fun <T : Comparable<T>> mergeArrays(first: Array<T>, second: Array<T?>) {
     var fi = 0
