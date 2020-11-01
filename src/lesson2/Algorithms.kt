@@ -39,6 +39,7 @@ fun optimizeBuyAndSell(inputName: String): Pair<Int, Int> {
     for (i in file.indices) {
         if (!file[i].matches(Regex("""\d*"""))) throw IllegalArgumentException()
         val numb = file[i].toInt()
+        if (numb < 0) throw IllegalArgumentException()
         if (numb - min > maxD) {
             maxD = numb - min
             inds = Pair(newMinI + 1, i + 1)
