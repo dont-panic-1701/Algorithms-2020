@@ -32,10 +32,10 @@ import java.io.File
  */
 fun optimizeBuyAndSell(inputName: String): Pair<Int, Int> {
     val file = File(inputName).readLines()
-    var min = Integer.MAX_VALUE
+    var min = file[0].toInt()
     var maxD = Integer.MIN_VALUE
-    var inds = Pair(-1, -1)
-    var newMinI = -1
+    var inds = Pair(0, -1)
+    var newMinI = 0
     for (i in file.indices) {
         if (!file[i].matches(Regex("""\d*"""))) throw IllegalArgumentException()
         val numb = file[i].toInt()
