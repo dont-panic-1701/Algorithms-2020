@@ -2,6 +2,9 @@
 
 package lesson6
 
+import lesson6.impl.GraphBuilder
+import java.util.*
+
 /**
  * Эйлеров цикл.
  * Средняя
@@ -59,9 +62,23 @@ fun Graph.findEulerLoop(): List<Graph.Edge> {
  * E    F    I
  * |
  * J ------------ K
+ * Трудоемкость - O(e*v)
+ * Ресурсоемкость - О(e+v)
  */
 fun Graph.minimumSpanningTree(): Graph {
-    TODO()
+    val ansGraph = GraphBuilder()
+    if (vertices.isEmpty()) return ansGraph.build()
+    dfsBuild(ansGraph, mutableSetOf(vertices.first()), vertices.first())
+    return ansGraph.build()
+}
+
+private fun Graph.dfsBuild(gb: GraphBuilder, ansVertices: MutableSet<Graph.Vertex>, v: Graph.Vertex) {
+    for (u in getNeighbors(v).minus(ansVertices)) {
+        gb.addVertex(u)
+        gb.addConnection(v, u)
+        ansVertices.add(u)
+        dfsBuild(gb, ansVertices, u)
+    }
 }
 
 /**
@@ -89,9 +106,30 @@ fun Graph.minimumSpanningTree(): Graph {
  * Если на входе граф с циклами, бросить IllegalArgumentException
  *
  * Эта задача может быть зачтена за пятый и шестой урок одновременно
+ * Трудоемкость - O(v+e) ?
+ * Ресурсоемкость - О(v)
  */
 fun Graph.largestIndependentVertexSet(): Set<Graph.Vertex> {
-    TODO()
+    val ans = mutableSetOf<Graph.Vertex>()
+    if (vertices.isEmpty()) return emptySet()
+    val notVisited = vertices.toMutableSet()
+    while (notVisited.isNotEmpty()) {
+        val ans0 = mutableSetOf<Graph.Vertex>()
+        val ans1 = mutableSetOf<Graph.Vertex>()
+        val q: Queue<Graph.Vertex> = LinkedList()
+        q.add(notVisited.first())
+        ans0.add(q.peek())
+        while (q.isNotEmpty()) {
+            val v = q.remove()
+            val nbs = getNeighbors(v).intersect(notVisited)
+            if (!Collections.disjoint(q, nbs)) throw IllegalArgumentException()
+            q.addAll(nbs)
+            if (ans0.contains(v)) ans1.addAll(nbs) else ans0.addAll(nbs)
+            notVisited.remove(v)
+        }
+        ans.addAll(if (ans0.size >= ans1.size) ans0 else ans1)
+    }
+    return ans
 }
 
 /**

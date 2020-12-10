@@ -2,7 +2,7 @@
 
 
 .gradle
-./gradle
+gradle
 .idea/*.xml
 .idea/copyright
 .idea/libraries

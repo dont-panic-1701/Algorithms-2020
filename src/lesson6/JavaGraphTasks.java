@@ -95,10 +95,9 @@ public class JavaGraphTasks {
      *
      * Эта задача может быть зачтена за пятый и шестой урок одновременно
      */
-    public static Set<Graph.Vertex> largestIndependentVertexSet(Graph graph) {
+    public static Set<Graph.Vertex> largestIndependentVertexSet(Graph graph)  {
         throw new NotImplementedError();
     }
-
     /**
      * Наидлиннейший простой путь.
      * Сложная
