@@ -68,12 +68,14 @@ fun Graph.findEulerLoop(): List<Graph.Edge> {
 fun Graph.minimumSpanningTree(): Graph {
     val ansGraph = GraphBuilder()
     if (vertices.isEmpty()) return ansGraph.build()
+    ansGraph.addVertex(vertices.first())
     dfsBuild(ansGraph, mutableSetOf(vertices.first()), vertices.first())
     return ansGraph.build()
 }
 
 private fun Graph.dfsBuild(gb: GraphBuilder, ansVertices: MutableSet<Graph.Vertex>, v: Graph.Vertex) {
-    for (u in getNeighbors(v).minus(ansVertices)) {
+    for (u in getNeighbors(v)) {
+        if (ansVertices.contains(u)) continue
         gb.addVertex(u)
         gb.addConnection(v, u)
         ansVertices.add(u)
